@@ -11,7 +11,7 @@ import SwiftUI
 struct Zeitgut_ConnectApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainContainerView()
         }
     }
 }
