@@ -15,6 +15,7 @@ struct MainContainerView: View {
         
         // Tab 1: Home
         StartView()
+          .padding(.top, 50)
           .applyAppBackground()
           .tabItem {
             Label("Start", systemImage: "house.fill")
@@ -22,7 +23,8 @@ struct MainContainerView: View {
           .tag(0)
         
         // Tab 2: Suchen / Entdecken
-        Text("Entdecken Screen") // Später durch eigene View ersetzen
+        MailboxView()
+          .padding(.top, 50)
           .applyAppBackground() // Hintergrund direkt hier anwenden
           .tabItem {
             Label("Briefkasten", systemImage: "envelope")
@@ -45,8 +47,8 @@ struct MainContainerView: View {
           }
           .tag(3)
       }
-      // Optional: Setzt die Farbe für das aktive Icon (z.B. Weiß, falls dein Hintergrund dunkel ist)
-      .tint(.silentMint)
+      // Set color for the selected menu item
+      .tint(.mutedSuccess)
     }
 }
 
