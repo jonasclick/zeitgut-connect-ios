@@ -16,7 +16,8 @@ struct LogTimeView: View {
   @State private var durationMinutes: Int = 0
   
   @State private var showErrors = false
-  
+  @State private var showSuccess = false
+
   let categories = ["Gartenarbeit", "Mit dem Hund spazieren", "Einkaufshilfe", "Briefversand abpacken", "Handwerkliche Arbeiten", "Klavierunterricht", "Deutsch lernen (Sprachtandem)"]
   
   let people = [
@@ -166,6 +167,7 @@ struct LogTimeView: View {
       VStack {
         // Push Button to Bottom
         Spacer()
+        successFooter()
         Button(action: submitForm) {
           Text("Zeiterfassung absenden")
             .foregroundStyle(Color.delightfulOcean)
@@ -185,10 +187,19 @@ struct LogTimeView: View {
   
   @ViewBuilder
   private func errorFooter(isValid: Bool, message: String) -> some View {
-    if showErrors && !isValid {
-      Text(message)
-        .foregroundColor(.softError)
-        .transition(.opacity)
+        if showErrors && !isValid {
+          Text(message)
+            .foregroundColor(.softError)
+            .transition(.opacity)
+    }
+  }
+  
+  @ViewBuilder
+  private func successFooter() -> some View {
+        if showSuccess {
+          Text("Deine Zeiterfassung wurde abgeschickt.")
+            .foregroundColor(.mutedSuccess)
+            .transition(.opacity)
     }
   }
   
@@ -205,6 +216,9 @@ struct LogTimeView: View {
       selectedPerson = ""
       durationHours = 0
       durationMinutes = 0
+      
+      // Show Success
+      showSuccess = true
       
       // CONSOLE LOG
       print("Formular erfolgreich abgesendet!")
