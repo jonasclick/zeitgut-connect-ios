@@ -13,7 +13,7 @@ struct MainContainerView: View {
     var body: some View {
       TabView(selection: $selectedTab) {
         
-        // Tab 1: Home
+        // HOME
         StartView()
           .padding(.top, 50)
           .applyAppBackground()
@@ -22,7 +22,7 @@ struct MainContainerView: View {
           }
           .tag(0)
         
-        // Tab 2: Suchen / Entdecken
+        // MAILBOX
         MailboxView()
           .padding(.top, 50)
           .applyAppBackground() // Hintergrund direkt hier anwenden
@@ -31,16 +31,18 @@ struct MainContainerView: View {
           }
           .tag(1)
         
-        // Tab 3: Mitteilungen
-        Text("Nachrichten Screen")
+        // MARKETPLACE
+        MarketplaceView()
+          .padding(.top, 50)
           .applyAppBackground()
           .tabItem {
             Label("Marktplatz", systemImage: "storefront")
           }
           .tag(2)
         
-        // Tab 4: Profil / Einstellungen
-        Text("Profil Screen")
+        // LOG TIME
+        LogTimeView()
+          .padding(.top, 50)
           .applyAppBackground()
           .tabItem {
             Label("Zeit erfassen", systemImage: "clock.badge.checkmark.fill")
