@@ -72,6 +72,7 @@ struct StartView: View {
               personName: "Marco Tanner",
               duration: 1.2
             ))
+            .padding(.bottom, 80)
           }
           
          
