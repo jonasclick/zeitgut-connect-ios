@@ -182,8 +182,12 @@ struct LogTimeView: View {
       .padding(.bottom, 80)
     }
     .padding()
-    .sheet(isPresented: $isShowingSuccessView) {
-      LogTimeConfirmationView(isShowingSuccessView: $isShowingSuccessView)
+    .sheet(isPresented: $isShowingSuccessView, onDismiss: {
+      clearFormData()
+    }) {
+      LogTimeConfirmationView(isShowingSuccessView: $isShowingSuccessView, selectedDate: $selectedDate, isReceived: $isReceived, selectedCategory: $selectedCategory, selectedPerson: $selectedPerson, durationHours: $durationHours, durationMinutes: $durationMinutes)
+        .padding()
+        .applyAppBackground()
     }
   }
   
@@ -200,18 +204,9 @@ struct LogTimeView: View {
     if isFormValid {
       showErrors = false
       
-      
-      // RESET FORM DATA
-      selectedDate = Date()
-      isReceived = true
-      selectedCategory = ""
-      selectedPerson = ""
-      durationHours = 0
-      durationMinutes = 0
-      
       // Show Success
       isShowingSuccessView = true
-      
+
       // CONSOLE LOG
       print("Formular erfolgreich abgesendet!")
       
@@ -221,6 +216,20 @@ struct LogTimeView: View {
         isShowingSuccessView = false
       }
     }
+  }
+  
+  private func clearFormData() {
+    // Reset State for additional views
+    showErrors = false
+    isShowingSuccessView = false
+    
+    // RESET FORM DATA
+    selectedDate = Date()
+    isReceived = true
+    selectedCategory = ""
+    selectedPerson = ""
+    durationHours = 0
+    durationMinutes = 0
   }
 }
 

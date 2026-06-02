@@ -8,83 +8,116 @@
 import SwiftUI
 
 struct LogTimeConfirmationView: View {
+  
+  @Binding var isShowingSuccessView: Bool
+  
+  @Binding var selectedDate: Date
+  @Binding var isReceived: Bool
+  @Binding var selectedCategory: String
+  @Binding var selectedPerson: String
+  @Binding var durationHours: Int
+  @Binding var durationMinutes: Int
+  
+  var body: some View {
+    ScrollView {
+      VStack (alignment: .leading) {
+        Text("Zeit erfolgreich erfasst")
+          .font(.system(size: 28))
+          .bold()
+          .padding(.top)
+          .padding(.bottom, 32)
         
-        @Binding var isShowingSuccessView: Bool
-        
-        var body: some View {
-            ScrollView {
-              VStack (alignment: .leading) {
-                Text("Häufig gestellte Fragen")
-                  .font(.system(size: 28))
-                  .bold()
-                  .padding(.top)
-                  .padding(.bottom, 10)
-                
-                Text("Wie kann ich Zeit erfassen, die ich geleistet oder erhalten habe?")
-                  .font(.headline)
-                
-                Text("Das Erfassen von Zeitgutschriften ist ganz einfach: Navigiere in der App unten zum Menütab «Zeit erfassen». Dort öffnet sich ein Formular, in dem du alle Details zum Einsatz (wie Dauer und Art der Hilfe) eintragen kannst.")
-                  .padding(.bottom)
-                
-                
-                
-                Text("Wer muss den Einsatz eintragen – die helfende oder die empfangende Person?")
-                  .font(.headline)
-                
-                Text("Das spielt keine Rolle. Beim Erfassen gibst du einfach an, ob du die Zeit «gegeben» oder «erhalten» hast. Wichtig ist nur, dass nur eine der beiden beteiligten Personen den Einsatz einträgt. Das System sorgt automatisch dafür, dass diese Zeiterfassung bei beiden Parteien verbucht wird, sobald die jeweils andere Partei sie in ihrem Briefkasten bestätigt hat.")
-                  .padding(.bottom)
-                
-                Text("Wozu dient der «Briefkasten» in der App?")
-                  .font(.headline)
-                
-                Text("Der Briefkasten ist deine persönliche Kontrollstation. Wenn jemand anderes einen Einsatz für dich / von dir erfasst hat, landet diese Anfrage zunächst dort. Du kannst die Details prüfen und die Anfrage mit einem Klick bestätigen oder ablehnen. Erst durch deine Bestätigung wird die Zeit für beide Konten definitiv verbucht.")
-                  .padding(.bottom)
-                
-                // SHOW ABOUT SHEET BUTTON
-                HStack {
-                  Spacer()
-                  Button {
-                    isShowingSuccessView = false
-                  } label: {
-                    Text("Fertig")
-                      .foregroundStyle(Color.delightfulOcean)
-                      .bold()
-                      .padding(.vertical, 12)
-                      .padding(.horizontal, 35)
-                      .foregroundColor(.white)
-                      .background(Color.silentMint)
-                      .cornerRadius(15)
-                  }
-                  Spacer()
-                }
-              }
-              .padding(.bottom, 80)
-            }
-            .scrollIndicators(.hidden)
-          }
-          .sheet(isPresented: $isShowingAboutView) {
-            AboutView(isShowingFAQView: $isShowingFAQView)
-              .padding()
-              .applyAppBackground()
-          }
+        // GIVEN / RECEIVED
+        HStack {
+          Text("Ich habe Zeit")
+            .font(.system(size: 20))
+            .bold()
+          Text(isReceived ? "erhalten" : "gegeben")
+            .font(.system(size: 20))
+            .bold()
+            .foregroundStyle(Color.mutedSuccess)
         }
-      
-      #Preview {
-        FAQView(isShowingFAQView: .constant(true))
-          .padding()
-          .applyAppBackground()
+        .padding(.bottom)
         
-      }
+        // PERSDON
+        HStack {
+          Text(isReceived ? "von" : "für")
+            .font(.system(size: 20))
+            .bold()
+          Text(selectedPerson)
+            .font(.system(size: 20))
+            .bold()
+            .foregroundStyle(Color.mutedSuccess)
+        }
+        .padding(.bottom)
 
-        Text("Confirmation")
-      Button("Log Time") {
-        // API CALL / SAVE DATA
+        // DATE
+        HStack {
+          Text("am")
+            .font(.system(size: 20))
+            .bold()
+          Text(selectedDate, format: .dateTime.day(.twoDigits).month(.twoDigits).year())
+            .font(.system(size: 20))
+            .bold()
+            .foregroundStyle(Color.mutedSuccess)
+        }
+        .padding(.bottom)
+
+        // Kategorie
+        HStack {
+          Text("Kategorie")
+            .font(.system(size: 20))
+            .bold()
+          Text(selectedCategory)
+            .font(.system(size: 20))
+            .bold()
+            .foregroundStyle(Color.mutedSuccess)
+        }
+        .padding(.bottom)
+
+        // DURATION
+        HStack {
+          Text("Dauer")
+            .font(.system(size: 20))
+            .bold()
+          Text("\(durationHours) Stunden")
+            .font(.system(size: 20))
+            .bold()
+            .foregroundStyle(Color.mutedSuccess)
+          Text("\(durationMinutes) Minuten")
+            .font(.system(size: 20))
+            .bold()
+            .foregroundStyle(Color.mutedSuccess)
+        }
+        .padding(.bottom, 32)
+        
+        // CLOSE SHEET
+        HStack {
+          Spacer()
+          Button {
+            isShowingSuccessView = false
+          } label: {
+            Text("Fertig")
+              .foregroundStyle(Color.delightfulOcean)
+              .bold()
+              .padding(.vertical, 12)
+              .padding(.horizontal, 35)
+              .foregroundColor(.white)
+              .background(Color.silentMint)
+              .cornerRadius(15)
+          }
+          Spacer()
+        }
       }
+      .padding(.bottom, 80)
     }
+    .scrollIndicators(.hidden)
+  }
 }
 
+
 #Preview {
-  LogTimeConfirmationView(isShowingSuccessView: .constant(true))
+  LogTimeConfirmationView(isShowingSuccessView: .constant(true), selectedDate: .constant(Date()), isReceived: .constant(true), selectedCategory: .constant("Gartenarbeit"), selectedPerson: .constant("Margrit Buri"), durationHours: .constant(2), durationMinutes: .constant(15))
     .padding()
     .applyAppBackground()
 }
