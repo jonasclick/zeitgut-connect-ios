@@ -9,9 +9,13 @@ import SwiftUI
 
 struct MainContainerView: View {
   @State private var selectedTab: Int = 0
+  @State private var isShowingFAQView: Bool = false
   
-    var body: some View {
+  var body: some View {
+    ZStack(alignment: .topTrailing) {
+      
       TabView(selection: $selectedTab) {
+        
         
         // HOME
         StartView()
@@ -51,9 +55,30 @@ struct MainContainerView: View {
       }
       // Set color for the selected menu item
       .tint(.mutedSuccess)
+      
+      Button {
+        isShowingFAQView = true
+      } label: {
+        Image(systemName: "questionmark")
+          .font(.system(size: 20))
+          .bold()
+          .foregroundStyle(.softShell)
+          .padding(11)
+          .background(.delightfulOcean)
+          .clipShape(Circle())
+      }
+      .padding(.trailing, 16)
+      .accessibilityLabel("Hilfe und häufige Fragen")
+      .zIndex(10)
     }
+    .sheet(isPresented: $isShowingFAQView) {
+      FAQView(isShowingFAQView: $isShowingFAQView)
+        .padding()
+        .applyAppBackground()
+    }
+  }
 }
 
 #Preview {
-    MainContainerView()
+  MainContainerView()
 }
