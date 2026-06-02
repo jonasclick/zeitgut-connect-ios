@@ -42,7 +42,7 @@ struct FAQView: View {
           Text("Der Briefkasten ist deine persönliche Kontrollstation. Wenn jemand anderes einen Einsatz für dich / von dir erfasst hat, landet diese Anfrage zunächst dort. Du kannst die Details prüfen und die Anfrage mit einem Klick bestätigen oder ablehnen. Erst durch deine Bestätigung wird die Zeit für beide Konten definitiv verbucht.")
             .padding(.bottom)
           
-          // SUBMIT BUTTON
+          // SHOW ABOUT SHEET BUTTON
           HStack {
             Spacer()
             Button {
@@ -64,6 +64,7 @@ struct FAQView: View {
       }
       .scrollIndicators(.hidden)
       
+      // CLOSE THIS SHEET BUTTON
       Button {
         isShowingFAQView = false
       } label: {
@@ -84,11 +85,6 @@ struct FAQView: View {
         .padding()
         .applyAppBackground()
     }
-    
-  }
-  
-  private func handleAboutClick() {
-    print("Click.")
   }
 }
 

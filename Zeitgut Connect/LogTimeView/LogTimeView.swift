@@ -16,7 +16,7 @@ struct LogTimeView: View {
   @State private var durationMinutes: Int = 0
   
   @State private var showErrors = false
-  @State private var showSuccess = false
+  @State private var isShowingSuccessView = false
 
   let categories = ["Gartenarbeit", "Mit dem Hund spazieren", "Einkaufshilfe", "Briefversand abpacken", "Handwerkliche Arbeiten", "Klavierunterricht", "Deutsch lernen (Sprachtandem)"]
   
@@ -167,7 +167,6 @@ struct LogTimeView: View {
       VStack {
         // Push Button to Bottom
         Spacer()
-        successFooter()
         Button(action: submitForm) {
           Text("Zeiterfassung absenden")
             .foregroundStyle(Color.delightfulOcean)
@@ -183,6 +182,9 @@ struct LogTimeView: View {
       .padding(.bottom, 80)
     }
     .padding()
+    .sheet(isPresented: $isShowingSuccessView) {
+      LogTimeConfirmationView(isShowingSuccessView: $isShowingSuccessView)
+    }
   }
   
   @ViewBuilder
@@ -194,20 +196,10 @@ struct LogTimeView: View {
     }
   }
   
-  @ViewBuilder
-  private func successFooter() -> some View {
-        if showSuccess {
-          Text("Deine Zeiterfassung wurde abgeschickt.")
-            .foregroundColor(.mutedSuccess)
-            .transition(.opacity)
-    }
-  }
-  
   private func submitForm() {
     if isFormValid {
       showErrors = false
       
-      // API CALL / SAVE DATA
       
       // RESET FORM DATA
       selectedDate = Date()
@@ -218,7 +210,7 @@ struct LogTimeView: View {
       durationMinutes = 0
       
       // Show Success
-      showSuccess = true
+      isShowingSuccessView = true
       
       // CONSOLE LOG
       print("Formular erfolgreich abgesendet!")
@@ -226,6 +218,7 @@ struct LogTimeView: View {
     } else {
       withAnimation {
         showErrors = true
+        isShowingSuccessView = false
       }
     }
   }
