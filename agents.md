@@ -36,8 +36,10 @@ Important files:
 - `Zeitgut Connect/App/Root/MainContainerView.swift`
 - `Zeitgut Connect/Features/Auth/AuthGateView.swift`
 - `Zeitgut Connect/Features/Auth/AuthViewModel.swift`
-- `Zeitgut Connect/Features/Auth/AuthAPI.swift`
 - `Zeitgut Connect/Features/Auth/AuthSession.swift`
+- `Zeitgut Connect/Features/Auth/Services/AuthService.swift`
+- `Zeitgut Connect/Features/Transactions/Services/TransactionService.swift`
+- `Zeitgut Connect/Core/Networking/APIClient.swift`
 - `Config/Zeitgut-Connect-Info.plist`
 - `Config/Entitlements/ZeitgutConnect.entitlements`
 

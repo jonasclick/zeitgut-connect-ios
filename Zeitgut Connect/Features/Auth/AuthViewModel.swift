@@ -23,7 +23,7 @@ final class AuthViewModel: ObservableObject {
     @Published var inviteCode = ""
     @Published private(set) var session = AuthSession()
 
-    private let api = AuthAPI()
+    private let authService = AuthService()
     private let clientId = "1ef99cf2-66c2-4f68-986b-81fb2b1e6a9f"
     private let redirectUri = "msauth.com.github.jonasclick.zeitgutconnect://auth"
     private let authorityURL = URL(string: "https://login.microsoftonline.com/common")!
@@ -134,11 +134,11 @@ final class AuthViewModel: ObservableObject {
         do {
             guard let applicationContext else {
                 authLogger.error("MSAL_STEP_1 interactive sign-in missing application context")
-                throw AuthAPIError.missingApplicationContext
+                throw AuthFlowError.missingApplicationContext
             }
             guard let viewController = Self.topViewController() else {
                 authLogger.error("MSAL_STEP_1 interactive sign-in missing presentation view controller")
-                throw AuthAPIError.missingPresentationContext
+                throw AuthFlowError.missingPresentationContext
             }
 
             authLogger.debug("MSAL_STEP_1 presenting interactive sign-in")
@@ -156,7 +156,7 @@ final class AuthViewModel: ObservableObject {
                         continuation.resume(returning: result)
                     } else {
                         authLogger.error("MSAL_STEP_1 interactive completion returned nil result and nil error")
-                        continuation.resume(throwing: AuthAPIError.missingMSALResult)
+                        continuation.resume(throwing: AuthFlowError.missingMSALResult)
                     }
                 }
             }
@@ -173,7 +173,7 @@ final class AuthViewModel: ObservableObject {
 
     private func acquireTokenSilently(account: MSALAccount) async throws -> MSALResult {
         guard let applicationContext else {
-            throw AuthAPIError.missingApplicationContext
+            throw AuthFlowError.missingApplicationContext
         }
 
         let parameters = MSALSilentTokenParameters(scopes: scopes, account: account)
@@ -187,7 +187,7 @@ final class AuthViewModel: ObservableObject {
                     continuation.resume(returning: result)
                 } else {
                     authLogger.error("MSAL_STEP_1 silent completion returned nil result and nil error")
-                    continuation.resume(throwing: AuthAPIError.missingMSALResult)
+                    continuation.resume(throwing: AuthFlowError.missingMSALResult)
                 }
             }
         }
@@ -198,7 +198,9 @@ final class AuthViewModel: ObservableObject {
         resultText = "Account: \(authenticationResult.account.username ?? "Unknown")"
         authLogger.debug("MSAL_STEP_2 calling /api/me username=\(authenticationResult.account.username ?? "unknown", privacy: .public) tokenLength=\(authenticationResult.accessToken.count)")
 
-        let (meResponse, rawJson) = try await api.fetchMe(accessToken: authenticationResult.accessToken)
+        let meResult = try await authService.fetchMe(accessToken: authenticationResult.accessToken)
+        let meResponse = meResult.value
+        let rawJson = meResult.rawBody
         authLogger.debug("MSAL_STEP_2 /api/me success body=\(rawJson, privacy: .public)")
         let hydratedSession = AuthSession(
             isLoggedIn: meResponse.isAssigned,
@@ -241,7 +243,9 @@ final class AuthViewModel: ObservableObject {
         authLogger.debug("MSAL_STEP_3 calling /api/me/join inviteCode=\(normalizedInviteCode, privacy: .public)")
 
         do {
-            let (joinResponse, rawJson) = try await api.joinAssociation(accessToken: session.accessToken, inviteCode: normalizedInviteCode)
+            let joinResult = try await authService.joinAssociation(accessToken: session.accessToken, inviteCode: normalizedInviteCode)
+            let joinResponse = joinResult.value
+            let rawJson = joinResult.rawBody
             authLogger.debug("MSAL_STEP_3 /api/me/join success body=\(rawJson, privacy: .public)")
             session.tenantId = joinResponse.tenantId ?? joinResponse.member?.tenantId ?? session.tenantId
             session.displayName = joinResponse.member?.name ?? session.displayName

@@ -15,14 +15,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		DDC000012FD10000007E475E /* Config */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Config;
-			sourceTree = "<group>";
-		};
 		DD4E81262FCB3762007E475E /* Zeitgut Connect */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "Zeitgut Connect";
+			sourceTree = "<group>";
+		};
+		DDC000012FD10000007E475E /* Config */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */

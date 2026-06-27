@@ -13,7 +13,7 @@ struct StartView: View {
     @State private var isLoadingActivities = false
     @State private var activityError: String?
 
-    private let api = AuthAPI()
+    private let transactionService = TransactionService()
 
     private var formattedTimeBalance: String {
       let balance = session.timeBalance ?? 0
@@ -98,7 +98,7 @@ struct StartView: View {
       activityError = nil
 
       do {
-        let (response, _) = try await api.fetchMyTransactions(accessToken: session.accessToken)
+        let response = try await transactionService.fetchMyTransactions(accessToken: session.accessToken).value
         activities = response.transactions
           .filter { $0.status == "confirmed" }
           .map { $0.toActivity(for: session.userId) }
