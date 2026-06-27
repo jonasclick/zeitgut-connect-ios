@@ -8,10 +8,15 @@
 import SwiftUI
 
 struct StartView: View {
-    let timeBalance: Double?
+    let session: AuthSession
+    @State private var activities: [Activity] = []
+    @State private var isLoadingActivities = false
+    @State private var activityError: String?
+
+    private let api = AuthAPI()
 
     private var formattedTimeBalance: String {
-      let balance = timeBalance ?? 0
+      let balance = session.timeBalance ?? 0
       return "\(balance.formatted(.number.precision(.fractionLength(1))))h"
     }
 
@@ -44,53 +49,61 @@ struct StartView: View {
         
         ScrollView (.vertical, showsIndicators: false) {
           VStack (spacing: 12) {
-            ActivityCardView(activity: Activity(
-              isReceived: true,
-              category: "Einkaufshilfe",
-              dateString: "14.02.26",
-              personName: "Marco Tanner",
-              duration: 1.5
-            ))
-            ActivityCardView(activity: Activity(
-              isReceived: false,
-              category: "Klavierunterricht",
-              dateString: "11.02.26",
-              personName: "Lina Pfister",
-              duration: 1
-            ))
-            ActivityCardView(activity: Activity(
-              isReceived: true,
-              category: "Gartenarbeit",
-              dateString: "09.02.26",
-              personName: "Lydia Berberat",
-              duration: 2.3
-            ))
-            ActivityCardView(activity: Activity(
-              isReceived: false,
-              category: "Klavierunterricht",
-              dateString: "01.02.26",
-              personName: "Lina Pfister",
-              duration: 1
-            ))
-            ActivityCardView(activity: Activity(
-              isReceived: true,
-              category: "Computerhilfe",
-              dateString: "12.01.26",
-              personName: "Marco Tanner",
-              duration: 1.2
-            ))
-            .padding(.bottom, 80)
+            if isLoadingActivities {
+              ProgressView("Aktivitäten werden geladen...")
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.vertical, 24)
+            } else if let activityError {
+              Text(activityError)
+                .font(.footnote)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.vertical, 24)
+            } else if activities.isEmpty {
+              Text("Noch keine bestätigten Aktivitäten vorhanden.")
+                .font(.footnote)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.vertical, 24)
+            } else {
+              ForEach(activities) { activity in
+                ActivityCardView(activity: activity)
+              }
+            }
           }
-          
-         
         }
+        .task(id: session.accessToken) {
+          await loadActivities()
+        }
+        .padding(.bottom, 75)
         // Push Content to top of screen
         Spacer()
       }
       .padding()
     }
+
+    private func loadActivities() async {
+      guard session.accessToken.isEmpty == false, session.userId.isEmpty == false else {
+        activities = []
+        return
+      }
+
+      isLoadingActivities = true
+      activityError = nil
+
+      do {
+        let (response, _) = try await api.fetchMyTransactions(accessToken: session.accessToken)
+        activities = response.transactions
+          .filter { $0.status == "confirmed" }
+          .map { $0.toActivity(for: session.userId) }
+        activityError = nil
+      } catch {
+        activityError = error.localizedDescription
+      }
+
+      isLoadingActivities = false
+    }
 }
 
 #Preview {
-    StartView(timeBalance: 2.6)
+    StartView(session: AuthSession(timeBalance: 2.6))
 }

@@ -14,6 +14,9 @@ struct ActivityCardView: View {
       VStack {
         // Icon and given / taken info
         HStack {
+          Spacer()
+          Text(activity.isReceived ? "erhalten" : "gegeben")
+            .fontWeight(.light)
           Image(systemName: activity.isReceived ? "gift" : "arrow.up.heart.fill")
             .foregroundStyle(Color.softShell)
             .frame(width: 36, height: 36)
@@ -21,11 +24,8 @@ struct ActivityCardView: View {
               Capsule()
                 .fill(Color.delightfulOcean)
             )
-          Text(activity.isReceived ? "Du hast erhalten" : "Du hast gegeben")
-            .fontWeight(.light)
-          Spacer()
         }
-        .padding(.bottom, 4)
+        .padding(.top, -4)
         
         // Activity Category and Date
         HStack {
@@ -55,15 +55,4 @@ struct ActivityCardView: View {
       .background(Color.silentMint)
       .clipShape(RoundedRectangle(cornerRadius: 25))
     }
-}
-
-#Preview {
-  ActivityCardView(activity: Activity(
-    isReceived: false,
-    category: "Einkaufshilfe",
-    dateString: "14.02.26",
-    personName: "Marco Tanner",
-    duration: 1.5
-  ))
-  .padding()
 }

@@ -35,6 +35,12 @@ struct AuthAPI {
         return try decodeResponse(MeResponse.self, data: data, response: response)
     }
 
+    func fetchMyTransactions(accessToken: String) async throws -> (TransactionsResponse, String) {
+        let request = authorizedRequest(path: "me/transactions", method: "GET", accessToken: accessToken)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        return try decodeResponse(TransactionsResponse.self, data: data, response: response)
+    }
+
     func joinAssociation(accessToken: String, inviteCode: String) async throws -> (JoinResponse, String) {
         var request = authorizedRequest(path: "me/join", method: "POST", accessToken: accessToken)
         request.httpBody = try JSONSerialization.data(withJSONObject: ["inviteCode": inviteCode])

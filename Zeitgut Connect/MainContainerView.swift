@@ -19,7 +19,7 @@ struct MainContainerView: View {
         
         
         // HOME
-        StartView(timeBalance: session.timeBalance)
+        StartView(session: session)
           .padding(.top, 50)
           .applyAppBackground()
           .tabItem {
