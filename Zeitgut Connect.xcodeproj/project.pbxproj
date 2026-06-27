@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		DDA0A0012FD00001007E475E /* MSAL in Frameworks */ = {isa = PBXBuildFile; productRef = DDA0A0032FD00001007E475E /* MSAL */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		DD4E81242FCB3762007E475E /* Zeitgut Connect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Zeitgut Connect.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDA0A0012FD00001007E475E /* MSAL in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = "Zeitgut Connect";
 			packageProductDependencies = (
+				DDA0A0032FD00001007E475E /* MSAL */,
 			);
 			productName = "Zeitgut Connect";
 			productReference = DD4E81242FCB3762007E475E /* Zeitgut Connect.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = DD4E811B2FCB3761007E475E;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				DDA0A0022FD00001007E475E /* XCRemoteSwiftPackageReference "microsoft-authentication-library-for-objc" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DD4E81252FCB3762007E475E /* Products */;
 			projectDirPath = "";
@@ -264,6 +273,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Zeitgut Connect/ZeitgutConnect.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5RLQ565RC5;
@@ -297,6 +307,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Zeitgut Connect/ZeitgutConnect.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5RLQ565RC5;
@@ -347,6 +358,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DDA0A0022FD00001007E475E /* XCRemoteSwiftPackageReference "microsoft-authentication-library-for-objc" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AzureAD/microsoft-authentication-library-for-objc";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.13.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DDA0A0032FD00001007E475E /* MSAL */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DDA0A0022FD00001007E475E /* XCRemoteSwiftPackageReference "microsoft-authentication-library-for-objc" */;
+			productName = MSAL;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DD4E811C2FCB3761007E475E /* Project object */;
 }

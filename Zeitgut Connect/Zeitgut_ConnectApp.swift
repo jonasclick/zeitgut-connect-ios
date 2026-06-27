@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct Zeitgut_ConnectApp: App {
+    @StateObject private var authViewModel = AuthViewModel()
+
     var body: some Scene {
         WindowGroup {
-            MainContainerView()
+            AuthGateView(viewModel: authViewModel)
+                .onOpenURL { url in
+                    authViewModel.handleRedirect(url)
+                }
         }
     }
 }
