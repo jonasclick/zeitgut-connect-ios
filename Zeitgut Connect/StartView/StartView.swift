@@ -25,13 +25,16 @@ struct StartView: View {
         
         Text("Zeitgut Connect")
           .font(.largeTitle)
-          .padding(.top, 20)
-          .padding(.bottom, 25)
+          .fontWeight(.bold)
+          .padding(.top, 5)
+          .padding(.bottom, 15)
         
+        // Mein Stundensaldo
         HStack {
-          Text("Dein Stundensaldo")
+          Text("Mein Stundensaldo")
             .font(.system(size: 20))
             .bold()
+          Spacer()
           Spacer()
           Text(formattedTimeBalance)
             .font(.system(size: 20))
@@ -41,8 +44,12 @@ struct StartView: View {
               Capsule()
                 .fill(Color.silentMint)
               )
+          Spacer()
         }
-        .padding(.bottom, 40)
+        .padding(.bottom, 10)
+        
+        
+        // Letzte Aktivitäten
         Text("Letzte Aktivitäten")
           .font(.system(size: 20))
           .bold()
@@ -70,11 +77,11 @@ struct StartView: View {
               }
             }
           }
+          .padding(.bottom, 75)
         }
         .task(id: session.accessToken) {
           await loadActivities()
         }
-        .padding(.bottom, 75)
         // Push Content to top of screen
         Spacer()
       }
