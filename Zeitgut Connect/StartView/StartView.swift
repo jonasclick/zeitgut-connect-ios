@@ -8,6 +8,13 @@
 import SwiftUI
 
 struct StartView: View {
+    let timeBalance: Double?
+
+    private var formattedTimeBalance: String {
+      let balance = timeBalance ?? 0
+      return "\(balance.formatted(.number.precision(.fractionLength(1))))h"
+    }
+
     var body: some View {
       VStack (alignment: .leading){
         
@@ -21,7 +28,7 @@ struct StartView: View {
             .font(.system(size: 20))
             .bold()
           Spacer()
-          Text("5.4h")
+          Text(formattedTimeBalance)
             .font(.system(size: 20))
             .bold()
             .frame(width: 80, height: 80)
@@ -85,5 +92,5 @@ struct StartView: View {
 }
 
 #Preview {
-    StartView()
+    StartView(timeBalance: 2.6)
 }

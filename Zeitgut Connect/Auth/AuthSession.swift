@@ -7,6 +7,7 @@ struct AuthSession: Equatable {
     var email = ""
     var tenantId = ""
     var userId = ""
+    var timeBalance: Double?
     var principalJson = ""
 }
 
@@ -25,6 +26,7 @@ struct MemberPayload: Decodable {
     let tenantId: String?
     let name: String?
     let email: String?
+    let timeBalance: Double?
 }
 
 struct MeResponse: Decodable {
@@ -34,6 +36,7 @@ struct MeResponse: Decodable {
     let email: String?
     let displayName: String?
     let tenantId: String?
+    let member: MemberPayload?
     let principal: PrincipalPayload?
 }
 

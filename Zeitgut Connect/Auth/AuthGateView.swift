@@ -7,7 +7,7 @@ struct AuthGateView: View {
         Group {
             switch viewModel.phase {
             case .authenticated:
-                MainContainerView()
+                MainContainerView(session: viewModel.session)
             case .loading:
                 loadingView
             case .signedOut:

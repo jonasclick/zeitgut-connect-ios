@@ -10,6 +10,7 @@ import SwiftUI
 struct MainContainerView: View {
   @State private var selectedTab: Int = 0
   @State private var isShowingFAQView: Bool = false
+  let session: AuthSession
   
   var body: some View {
     ZStack(alignment: .topTrailing) {
@@ -18,7 +19,7 @@ struct MainContainerView: View {
         
         
         // HOME
-        StartView()
+        StartView(timeBalance: session.timeBalance)
           .padding(.top, 50)
           .applyAppBackground()
           .tabItem {
@@ -80,5 +81,5 @@ struct MainContainerView: View {
 }
 
 #Preview {
-  MainContainerView()
+  MainContainerView(session: AuthSession())
 }
