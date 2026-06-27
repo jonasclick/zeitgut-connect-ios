@@ -23,7 +23,7 @@ The iOS app should behave like the Android app at the auth-contract level even i
 - Backend session bootstrap through Azure Functions
 
 Current Xcode project:
-- Project: `zeitgut-connect-ios/Zeitgut Connect/Zeitgut Connect.xcodeproj`
+- Project: `zeitgut-connect-ios/Zeitgut Connect.xcodeproj`
 - Target: `Zeitgut Connect`
 - Bundle identifier: `com.github.jonasclick.zeitgutconnect`
 
@@ -32,14 +32,14 @@ Current Xcode project:
 The existing app shell and tab UI already existed before auth was added.
 
 Important files:
-- `Zeitgut Connect/Zeitgut Connect/Zeitgut_ConnectApp.swift`
-- `Zeitgut Connect/Zeitgut Connect/MainContainerView.swift`
-- `Zeitgut Connect/Zeitgut Connect/Auth/AuthGateView.swift`
-- `Zeitgut Connect/Zeitgut Connect/Auth/AuthViewModel.swift`
-- `Zeitgut Connect/Zeitgut Connect/Auth/AuthAPI.swift`
-- `Zeitgut Connect/Zeitgut Connect/Auth/AuthSession.swift`
-- `Zeitgut Connect/Zeitgut-Connect-Info.plist`
-- `Zeitgut Connect/Zeitgut Connect/ZeitgutConnect.entitlements`
+- `Zeitgut Connect/App/Zeitgut_ConnectApp.swift`
+- `Zeitgut Connect/App/Root/MainContainerView.swift`
+- `Zeitgut Connect/Features/Auth/AuthGateView.swift`
+- `Zeitgut Connect/Features/Auth/AuthViewModel.swift`
+- `Zeitgut Connect/Features/Auth/AuthAPI.swift`
+- `Zeitgut Connect/Features/Auth/AuthSession.swift`
+- `Config/Zeitgut-Connect-Info.plist`
+- `Config/Entitlements/ZeitgutConnect.entitlements`
 
 The auth layer sits in front of `MainContainerView` rather than being mixed into the tab views.
 

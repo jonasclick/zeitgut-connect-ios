@@ -14,22 +14,14 @@
 		DD4E81242FCB3762007E475E /* Zeitgut Connect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Zeitgut Connect.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		DD5AC4F72FCEFC0400694A3C /* Exceptions for "Zeitgut Connect" folder in "Zeitgut Connect" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Zeitgut-Connect-Info.plist",
-			);
-			target = DD4E81232FCB3761007E475E /* Zeitgut Connect */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		DDC000012FD10000007E475E /* Config */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Config;
+			sourceTree = "<group>";
+		};
 		DD4E81262FCB3762007E475E /* Zeitgut Connect */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				DD5AC4F72FCEFC0400694A3C /* Exceptions for "Zeitgut Connect" folder in "Zeitgut Connect" target */,
-			);
 			path = "Zeitgut Connect";
 			sourceTree = "<group>";
 		};
@@ -50,6 +42,7 @@
 		DD4E811B2FCB3761007E475E = {
 			isa = PBXGroup;
 			children = (
+				DDC000012FD10000007E475E /* Config */,
 				DD4E81262FCB3762007E475E /* Zeitgut Connect */,
 				DD4E81252FCB3762007E475E /* Products */,
 			);
@@ -273,13 +266,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Zeitgut Connect/ZeitgutConnect.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Config/Entitlements/ZeitgutConnect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5RLQ565RC5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Zeitgut-Connect-Info.plist";
+				INFOPLIST_FILE = "Config/Zeitgut-Connect-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Zeitgut Connect";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -307,13 +300,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Zeitgut Connect/ZeitgutConnect.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Config/Entitlements/ZeitgutConnect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5RLQ565RC5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Zeitgut-Connect-Info.plist";
+				INFOPLIST_FILE = "Config/Zeitgut-Connect-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Zeitgut Connect";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
