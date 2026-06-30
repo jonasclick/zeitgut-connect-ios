@@ -9,26 +9,31 @@ import SwiftUI
 
 struct MainContainerView: View {
   @Binding var session: AuthSession
+  @Environment(\.scenePhase) private var scenePhase
   @State private var selectedTab: Int = 0
   @State private var isShowingFAQView: Bool = false
+  @State private var refreshGeneration = 0
+  @State private var didHandleInitialActiveScene = false
+
+  private let authService = AuthService()
   
   var body: some View {
     ZStack(alignment: .topTrailing) {
       
       TabView(selection: $selectedTab) {
         
-        
+
         // HOME
-        StartView(session: session)
+        StartView(session: $session, refreshGeneration: refreshGeneration)
           .padding(.top, 50)
           .applyAppBackground()
           .tabItem {
             Label("Start", systemImage: "house.fill")
           }
           .tag(0)
-        
+
         // MAILBOX
-        MailboxView(session: $session)
+        MailboxView(session: $session, refreshGeneration: refreshGeneration)
           .padding(.top, 50)
           .applyAppBackground() // Hintergrund direkt hier anwenden
           .tabItem {
@@ -72,10 +77,41 @@ struct MainContainerView: View {
       .accessibilityLabel("Hilfe und häufige Fragen")
       .zIndex(10)
     }
+    .task(id: scenePhase) {
+      guard scenePhase == .active else {
+        return
+      }
+
+      await refreshSessionSnapshot()
+      if didHandleInitialActiveScene {
+        refreshGeneration += 1
+      } else {
+        didHandleInitialActiveScene = true
+      }
+    }
+    .onChange(of: selectedTab) { _, _ in
+      Task { @MainActor in
+        await refreshSessionSnapshot()
+        refreshGeneration += 1
+      }
+    }
     .sheet(isPresented: $isShowingFAQView) {
       FAQView(isShowingFAQView: $isShowingFAQView)
         .padding()
         .applyAppBackground()
+    }
+  }
+
+  @MainActor
+  private func refreshSessionSnapshot() async {
+    guard session.accessToken.isEmpty == false else {
+      return
+    }
+
+    do {
+      session = try await authService.refreshSession(accessToken: session.accessToken, session: session)
+    } catch {
+      // Keep the current UI state if a background refresh fails.
     }
   }
 }

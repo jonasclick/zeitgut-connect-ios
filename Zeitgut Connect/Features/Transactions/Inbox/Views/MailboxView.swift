@@ -9,26 +9,32 @@ import SwiftUI
 
 struct MailboxView: View {
     @Binding var session: AuthSession
+    let refreshGeneration: Int
 
     @State private var activities: [Activity] = []
     @State private var isLoadingActivities = false
     @State private var activityError: String?
     @State private var mailboxReloadCounter = 0
 
+    private let authService = AuthService()
     private let transactionService = TransactionService()
 
+    private var refreshTaskId: String {
+      "\(session.accessToken)-\(session.userId)-\(refreshGeneration)-\(mailboxReloadCounter)"
+    }
+
     var body: some View {
-      VStack(alignment: .leading) {
-        Text("Briefkasten")
-          .font(.system(size: 28))
-          .bold()
-          .padding(.bottom, 10)
-
-        Text("Bitte prüfe folgende Transaktionen")
-            .font(.system(size: 20))
+      ScrollView(.vertical, showsIndicators: false) {
+        VStack(alignment: .leading) {
+          Text("Briefkasten")
+            .font(.system(size: 28))
             .bold()
+            .padding(.bottom, 10)
 
-        ScrollView(.vertical, showsIndicators: false) {
+          Text("Bitte prüfe folgende Transaktionen")
+              .font(.system(size: 20))
+              .bold()
+
           VStack(spacing: 12) {
             if isLoadingActivities {
               ProgressView("Briefkasten wird geladen...")
@@ -66,21 +72,20 @@ struct MailboxView: View {
             }
           }
           .padding(.bottom, 18)
+          Spacer(minLength: 0)
         }
-
-        Spacer()
+        .padding()
       }
-      .padding()
-      .task(id: mailboxTaskId) {
-        await loadActivities()
+      .refreshable {
+        await refreshContent()
+      }
+      .task(id: refreshTaskId) {
+        await refreshContent()
       }
     }
 
-    private var mailboxTaskId: String {
-      "\(session.accessToken)-\(mailboxReloadCounter)"
-    }
-
-    private func loadActivities() async {
+    @MainActor
+    private func refreshContent() async {
       guard session.accessToken.isEmpty == false, session.userId.isEmpty == false else {
         activities = []
         return
@@ -90,6 +95,7 @@ struct MailboxView: View {
       activityError = nil
 
       do {
+        session = try await authService.refreshSession(accessToken: session.accessToken, session: session)
         let response = try await transactionService.fetchMailbox(accessToken: session.accessToken).value
         activities = response.transactions.map { $0.toActivity(for: session.userId) }
         activityError = nil
@@ -144,5 +150,5 @@ struct MailboxView: View {
 }
 
 #Preview {
-    MailboxView(session: .constant(AuthSession()))
+    MailboxView(session: .constant(AuthSession()), refreshGeneration: 0)
 }

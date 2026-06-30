@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct StartView: View {
-    let session: AuthSession
+    @Binding var session: AuthSession
+    let refreshGeneration: Int
     @State private var activities: [Activity] = []
     @State private var isLoadingActivities = false
     @State private var activityError: String?
 
+    private let authService = AuthService()
     private let transactionService = TransactionService()
 
     private var formattedTimeBalance: String {
@@ -20,41 +22,40 @@ struct StartView: View {
       return "\(balance.formatted(.number.precision(.fractionLength(1))))h"
     }
 
+    private var refreshTaskId: String {
+      "\(session.accessToken)-\(session.userId)-\(refreshGeneration)"
+    }
+
     var body: some View {
-      VStack (alignment: .leading){
-        
-        Text("Zeitgut Connect")
-          .font(.largeTitle)
-          .fontWeight(.bold)
-          .padding(.top, 5)
-          .padding(.bottom, 15)
-        
-        // Mein Stundensaldo
-        HStack {
-          Text("Mein Stundensaldo")
+      ScrollView (.vertical, showsIndicators: false) {
+        VStack (alignment: .leading) {
+          Text("Zeitgut Connect")
+            .font(.largeTitle)
+            .fontWeight(.bold)
+            .padding(.top, 5)
+            .padding(.bottom, 15)
+
+          HStack {
+            Text("Mein Stundensaldo")
+              .font(.system(size: 20))
+              .bold()
+            Spacer()
+            Spacer()
+            Text(formattedTimeBalance)
+              .font(.system(size: 20))
+              .bold()
+              .frame(width: 80, height: 80)
+              .background(
+                Capsule()
+                  .fill(Color.silentMint)
+                )
+            Spacer()
+          }
+          .padding(.bottom, 10)
+
+          Text("Letzte Aktivitäten")
             .font(.system(size: 20))
             .bold()
-          Spacer()
-          Spacer()
-          Text(formattedTimeBalance)
-            .font(.system(size: 20))
-            .bold()
-            .frame(width: 80, height: 80)
-            .background(
-              Capsule()
-                .fill(Color.silentMint)
-              )
-          Spacer()
-        }
-        .padding(.bottom, 10)
-        
-        
-        // Letzte Aktivitäten
-        Text("Letzte Aktivitäten")
-          .font(.system(size: 20))
-          .bold()
-        
-        ScrollView (.vertical, showsIndicators: false) {
           VStack (spacing: 12) {
             if isLoadingActivities {
               ProgressView("Aktivitäten werden geladen...")
@@ -78,17 +79,20 @@ struct StartView: View {
             }
           }
           .padding(.bottom, 75)
+          Spacer(minLength: 0)
         }
-        .task(id: session.accessToken) {
-          await loadActivities()
-        }
-        // Push Content to top of screen
-        Spacer()
+        .padding()
       }
-      .padding()
+      .refreshable {
+        await refreshContent()
+      }
+      .task(id: refreshTaskId) {
+        await refreshContent()
+      }
     }
 
-    private func loadActivities() async {
+    @MainActor
+    private func refreshContent() async {
       guard session.accessToken.isEmpty == false, session.userId.isEmpty == false else {
         activities = []
         return
@@ -98,6 +102,7 @@ struct StartView: View {
       activityError = nil
 
       do {
+        session = try await authService.refreshSession(accessToken: session.accessToken, session: session)
         let response = try await transactionService.fetchMyTransactions(accessToken: session.accessToken).value
         activities = response.transactions
           .filter { $0.status == "confirmed" }
@@ -113,8 +118,9 @@ struct StartView: View {
 
       isLoadingActivities = false
     }
+
 }
 
 #Preview {
-    StartView(session: AuthSession(timeBalance: 2.6))
+    StartView(session: .constant(AuthSession(timeBalance: 2.6)), refreshGeneration: 0)
 }

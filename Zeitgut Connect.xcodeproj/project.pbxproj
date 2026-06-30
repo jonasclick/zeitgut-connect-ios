@@ -47,14 +47,22 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Vendor/MSAL/MSAL.framework.dSYM",
+				"$(SRCROOT)/Vendor/MSAL/MSAL.framework.dSYM/Contents/Info.plist",
+				"$(SRCROOT)/Vendor/MSAL/MSAL.framework.dSYM/Contents/Resources/DWARF/MSAL",
+				"$(BUILT_PRODUCTS_DIR)/MSAL.framework/MSAL",
 			);
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(DWARF_DSYM_FOLDER_PATH)/MSAL.framework.dSYM",
+				"$(DWARF_DSYM_FOLDER_PATH)/MSAL.framework.dSYM/Contents/Info.plist",
+				"$(DWARF_DSYM_FOLDER_PATH)/MSAL.framework.dSYM/Contents/Resources/DWARF/MSAL",
+				"$(DWARF_DSYM_FOLDER_PATH)/MSAL.framework.dSYM/Contents/Resources/Relocations/aarch64/MSAL.yml",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "bash \"${SRCROOT}/Scripts/copy-msal-dsym.sh\"";
+			shellPath = /bin/bash;
+			shellScript = "set -euo pipefail\n\n# Copy the vendored MSAL dSYM into the archive only for Release archive builds.\nif [[ \"${CONFIGURATION:-}\" != \"Release\" || \"${ACTION:-}\" != \"install\" ]]; then\n  exit 0\nfi\n\nsource_dsym=\"${SRCROOT}/Vendor/MSAL/MSAL.framework.dSYM\"\ndestination_root=\"${DWARF_DSYM_FOLDER_PATH:-}\"\ndestination_dsym=\"${destination_root}/MSAL.framework.dSYM\"\nmsal_binary=\"${BUILT_PRODUCTS_DIR}/MSAL.framework/MSAL\"\n\nif [[ ! -d \"${source_dsym}\" ]]; then\n  echo \"error: MSAL dSYM not found at ${source_dsym}\"\n  exit 1\nfi\n\nif [[ ! -f \"${msal_binary}\" ]]; then\n  echo \"error: MSAL binary not found at ${msal_binary}\"\n  exit 1\nfi\n\ndsym_uuids=\"$(dwarfdump --uuid \"${source_dsym}\" | awk '{print $2}' | sort)\"\nbinary_uuids=\"$(dwarfdump --uuid \"${msal_binary}\" | awk '{print $2}' | sort)\"\n\nif [[ \"${dsym_uuids}\" != \"${binary_uuids}\" ]]; then\n  echo \"error: MSAL dSYM UUID mismatch.\"\n  echo \"error: dSYM UUIDs: ${dsym_uuids}\"\n  echo \"error: binary UUIDs: ${binary_uuids}\"\n  exit 1\nfi\n\nmkdir -p \"${destination_root}\"\nditto \"${source_dsym}\" \"${destination_dsym}\"\necho \"Copied MSAL dSYM to ${destination_dsym}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -291,6 +299,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5RLQ565RC5;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Config/Zeitgut-Connect-Info.plist";
@@ -327,6 +336,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5RLQ565RC5;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Config/Zeitgut-Connect-Info.plist";
