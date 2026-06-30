@@ -30,40 +30,66 @@ struct TransactionPayload: Decodable {
   let createdAt: String
 
   func toActivity(for memberId: String) -> Activity {
-    let isReceived = partnerId == memberId
-    let personName = isReceived ? creatorName : partnerName
+    let isCurrentMemberCreator = creatorId == memberId
+    let isReceived = isCurrentMemberCreator ? direction == "received" : direction == "given"
+    let personName = isCurrentMemberCreator ? partnerName : creatorName
 
     return Activity(
       id: id,
       isReceived: isReceived,
       category: category,
-      dateString: Self.displayDate(from: date),
+      dateString: AppDateFormatter.displayDate(fromBackendDate: date),
       personName: personName,
       duration: durationMinutes / 60
     )
   }
 
-  private static func displayDate(from value: String) -> String {
-    let parser = DateFormatter()
-    parser.calendar = Calendar(identifier: .gregorian)
-    parser.locale = Locale(identifier: "en_US_POSIX")
-    parser.dateFormat = "yyyy-MM-dd"
-
-    let formatter = DateFormatter()
-    formatter.calendar = Calendar(identifier: .gregorian)
-    formatter.locale = Locale(identifier: "de_CH")
-    formatter.dateFormat = "dd.MM.yy"
-
-    guard let date = parser.date(from: value) else {
-      return value
-    }
-
-    return formatter.string(from: date)
-  }
 }
 
 struct TransactionsResponse: Decodable {
   let authenticated: Bool
   let isAssigned: Bool
   let transactions: [TransactionPayload]
+}
+
+struct MemberOption: Decodable, Identifiable, Hashable {
+  let id: String
+  let name: String?
+  let timeBalance: Double?
+
+  var displayName: String {
+    name?.isEmpty == false ? name! : "Unbekannte Person"
+  }
+}
+
+struct MembersResponse: Decodable {
+  let authenticated: Bool
+  let isAssigned: Bool
+  let currentMemberId: String?
+  let members: [MemberOption]
+}
+
+struct TimeCategoryOption: Decodable, Identifiable, Hashable {
+  let id: String
+  let label: String
+}
+
+struct TimeCategoriesResponse: Decodable {
+  let authenticated: Bool
+  let isAssigned: Bool
+  let categories: [TimeCategoryOption]
+}
+
+struct CreateTransactionRequest: Encodable {
+  let date: String
+  let direction: String
+  let partnerId: String
+  let categoryId: String
+  let durationMinutes: Int
+}
+
+struct CreateTransactionResponse: Decodable {
+  let authenticated: Bool
+  let isAssigned: Bool
+  let transaction: TransactionPayload?
 }

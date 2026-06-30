@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct RequestOffer {
+struct RequestOffer: Identifiable {
+  var id: String { "\(isRequest)-\(category)-\(personName)" }
   let isRequest: Bool      // true = "Anfrage für Hilfe", false = "Angebot für Hilfe"
   let category: String      // z.B. "Einkaufshilfe"
   let personName: String    // z.B. "Marco Tanner"

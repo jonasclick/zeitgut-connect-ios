@@ -15,15 +15,15 @@ struct AuthService {
     }
 
     func joinAssociation(accessToken: String, inviteCode: String) async throws -> APIResponse<JoinResponse> {
-        guard let body = try? JSONSerialization.data(withJSONObject: ["inviteCode": inviteCode]) else {
-            throw NetworkError.encodingFailed
-        }
-
-        return try await apiClient.send(APIEndpoint(
+        try await apiClient.send(APIEndpoint(
             path: "me/join",
             method: .post,
-            body: body,
+            body: JoinAssociationRequest(inviteCode: inviteCode),
             accessToken: accessToken
         ))
     }
+}
+
+private struct JoinAssociationRequest: Encodable {
+    let inviteCode: String
 }

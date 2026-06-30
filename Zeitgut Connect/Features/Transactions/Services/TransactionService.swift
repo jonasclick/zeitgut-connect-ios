@@ -13,4 +13,30 @@ struct TransactionService {
             accessToken: accessToken
         ))
     }
+
+    func fetchMembers(accessToken: String) async throws -> APIResponse<MembersResponse> {
+        try await apiClient.send(APIEndpoint(
+            path: "members",
+            accessToken: accessToken
+        ))
+    }
+
+    func fetchTimeCategories(accessToken: String) async throws -> APIResponse<TimeCategoriesResponse> {
+        try await apiClient.send(APIEndpoint(
+            path: "time-categories",
+            accessToken: accessToken
+        ))
+    }
+
+    func createTransaction(
+        accessToken: String,
+        request: CreateTransactionRequest
+    ) async throws -> APIResponse<CreateTransactionResponse> {
+        try await apiClient.send(APIEndpoint(
+            path: "transactions",
+            method: .post,
+            body: request,
+            accessToken: accessToken
+        ))
+    }
 }

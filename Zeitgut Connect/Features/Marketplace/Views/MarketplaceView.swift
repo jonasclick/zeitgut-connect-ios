@@ -21,15 +21,9 @@ struct MarketplaceView: View {
         
         ScrollView (.vertical, showsIndicators: false) {
           VStack (spacing: 12) {
-            RequestOfferView(requestOffer: RequestOffer(
-              isRequest: true, category: "Gartenarbeit", personName: "Margrit Buri"
-            ))
-            RequestOfferView(requestOffer: RequestOffer(
-              isRequest: true, category: "Briefversand abpacken", personName: "Regula Peters"
-            ))
-            RequestOfferView(requestOffer: RequestOffer(
-              isRequest: true, category: "Einkaufshilfe", personName: "Margrit Buri"
-            ))
+            ForEach(MarketplaceSampleData.requests, id: \.id) { requestOffer in
+              RequestOfferView(requestOffer: requestOffer)
+            }
           }
         }
         Text("Angebote")
@@ -37,15 +31,9 @@ struct MarketplaceView: View {
           .bold()
         ScrollView (.vertical, showsIndicators: false) {
           VStack (spacing: 12) {
-            RequestOfferView(requestOffer: RequestOffer(
-              isRequest: false, category: "Handwerkliche Arbeiten", personName: "Marco Tanner"
-            ))
-            RequestOfferView(requestOffer: RequestOffer(
-              isRequest: false, category: "Klavierunterricht", personName: "Margrit Burgi"
-            ))
-            RequestOfferView(requestOffer: RequestOffer(
-              isRequest: false, category: "Deutsch lernen (Sprachtandem)", personName: "Jakob Rieder"
-            ))
+            ForEach(MarketplaceSampleData.offers, id: \.id) { requestOffer in
+              RequestOfferView(requestOffer: requestOffer)
+            }
           }
         }
 

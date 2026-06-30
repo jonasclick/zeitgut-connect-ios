@@ -17,4 +17,17 @@ struct APIEndpoint<Response: Decodable> {
         self.body = body
         self.accessToken = accessToken
     }
+
+    init<Body: Encodable>(
+        path: String,
+        method: HTTPMethod,
+        body: Body,
+        accessToken: String? = nil,
+        encoder: JSONEncoder = JSONEncoder()
+    ) throws {
+        self.path = path
+        self.method = method
+        self.body = try encoder.encode(body)
+        self.accessToken = accessToken
+    }
 }

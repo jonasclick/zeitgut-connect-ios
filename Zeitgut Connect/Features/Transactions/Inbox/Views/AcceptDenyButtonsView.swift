@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AcceptDenyButtonsView: View {
   @State private var isShowingConfirmation = false
+  var onAccept: () -> Void = {}
+  var onDeny: () -> Void = {}
   
     var body: some View {
       HStack (spacing: 12) {
@@ -33,19 +35,16 @@ struct AcceptDenyButtonsView: View {
         ) {
           // Action Buttons inside
           Button("Ja, Zeiterfassung ablehnen", role: .destructive) {
-            // ACTION
-            print("Transaction denied.")
+            onDeny()
           }
-          Button("Nein, zurück") {
-            print("Stopped.")
-          }
+          Button("Nein, zurück") {}
         } message: {
           Text("Willst du diese Zeiterfassung wirklich ablehnen? Dies kann nicht rückgängig gemacht werden.")
         }
         
         // ACCEPT (without confirmation dialog)
         Button(action: {
-          print("Transaction accepted.")
+          onAccept()
         }) {
           Text("Annehmen")
             .foregroundStyle(Color.delightfulOcean)

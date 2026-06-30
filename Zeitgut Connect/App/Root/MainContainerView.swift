@@ -46,7 +46,7 @@ struct MainContainerView: View {
           .tag(2)
         
         // LOG TIME
-        LogTimeView()
+        LogTimeView(session: session)
           .padding(.top, 50)
           .applyAppBackground()
           .tabItem {
