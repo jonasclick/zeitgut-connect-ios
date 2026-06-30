@@ -28,7 +28,6 @@ struct TransactionService {
         try await apiClient.send(APIEndpoint(
             path: "me/mailbox/\(transactionId)/accept",
             method: .post,
-            body: Data(),
             accessToken: accessToken
         ))
     }
@@ -40,7 +39,6 @@ struct TransactionService {
         try await apiClient.send(APIEndpoint(
             path: "me/mailbox/\(transactionId)/deny",
             method: .post,
-            body: Data(),
             accessToken: accessToken
         ))
     }

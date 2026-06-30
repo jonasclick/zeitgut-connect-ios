@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct MainContainerView: View {
+  @Binding var session: AuthSession
   @State private var selectedTab: Int = 0
   @State private var isShowingFAQView: Bool = false
-  let session: AuthSession
   
   var body: some View {
     ZStack(alignment: .topTrailing) {
@@ -28,7 +28,7 @@ struct MainContainerView: View {
           .tag(0)
         
         // MAILBOX
-        MailboxView(session: session)
+        MailboxView(session: $session)
           .padding(.top, 50)
           .applyAppBackground() // Hintergrund direkt hier anwenden
           .tabItem {
@@ -81,5 +81,5 @@ struct MainContainerView: View {
 }
 
 #Preview {
-  MainContainerView(session: AuthSession())
+  MainContainerView(session: .constant(AuthSession()))
 }

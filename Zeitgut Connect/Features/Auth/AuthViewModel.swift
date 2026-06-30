@@ -21,7 +21,7 @@ final class AuthViewModel: ObservableObject {
     @Published var errorText: String?
     @Published var resultText = "Waiting for sign-in"
     @Published var inviteCode = ""
-    @Published private(set) var session = AuthSession()
+    @Published var session = AuthSession()
 
     private let authService = AuthService()
     private let clientId = "1ef99cf2-66c2-4f68-986b-81fb2b1e6a9f"

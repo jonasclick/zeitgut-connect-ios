@@ -63,6 +63,7 @@ struct MailboxActionResponse: Decodable {
   let authenticated: Bool
   let isAssigned: Bool
   let transaction: TransactionPayload?
+  let member: MemberPayload?
 }
 
 struct MemberOption: Decodable, Identifiable, Hashable {

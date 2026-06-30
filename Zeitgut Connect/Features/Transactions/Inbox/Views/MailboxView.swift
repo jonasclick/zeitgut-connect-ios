@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MailboxView: View {
-    let session: AuthSession
+    @Binding var session: AuthSession
 
     @State private var activities: [Activity] = []
     @State private var isLoadingActivities = false
@@ -110,10 +110,11 @@ struct MailboxView: View {
       activityError = nil
 
       do {
-        _ = try await transactionService.acceptMailboxTransaction(
+        let response = try await transactionService.acceptMailboxTransaction(
           accessToken: session.accessToken,
           transactionId: activity.id
-        )
+        ).value
+        session.timeBalance = response.member?.timeBalance ?? session.timeBalance
         mailboxReloadCounter += 1
       } catch {
         activityError = error.isAuthenticationRequired ? nil : error.localizedDescription
@@ -128,10 +129,11 @@ struct MailboxView: View {
       activityError = nil
 
       do {
-        _ = try await transactionService.denyMailboxTransaction(
+        let response = try await transactionService.denyMailboxTransaction(
           accessToken: session.accessToken,
           transactionId: activity.id
-        )
+        ).value
+        session.timeBalance = response.member?.timeBalance ?? session.timeBalance
         mailboxReloadCounter += 1
       } catch {
         activityError = error.isAuthenticationRequired ? nil : error.localizedDescription
@@ -142,5 +144,5 @@ struct MailboxView: View {
 }
 
 #Preview {
-    MailboxView(session: AuthSession())
+    MailboxView(session: .constant(AuthSession()))
 }
