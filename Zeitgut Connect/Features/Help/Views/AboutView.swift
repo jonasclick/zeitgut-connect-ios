@@ -11,6 +11,10 @@ struct AboutView: View {
   
   @Binding var isShowingFAQView: Bool
   
+  private var currentYear: Int {
+    Calendar.current.component(.year, from: .now)
+  }
+  
   var body: some View {
     ZStack(alignment: .topTrailing) {
       ScrollView {
@@ -21,33 +25,20 @@ struct AboutView: View {
             .padding(.top)
             .padding(.bottom, 10)
           
-          Text("Herstellerangaben")
-            .font(.headline)
+          Text("Impressum")
+            .font(.system(size: 24))
+            .padding(.bottom, 5)
           
-          Text("""
-Zeitgut Connect wird entwickelt von Jonas Vetsch
-Hubelhüsistrasse 12
-3147 Mittelhäusern
-Im Rahmen eines Lernprojekts an der gibb Berufsfachschule Bern. © 2026
-""")
-          .padding(.bottom)
-          
-          
-          
-          Text("Anbieter")
-            .font(.headline)
-          
-          Text("Zeitgut Connect wird angeboten vom Verein Zeitgut, 3147 Mittelhäusern.")
-            .padding(.bottom)
-          
-          Text("Verantwortlich für den Inhalt")
+          Text("Verantwortlich für den Inhalt (Autor)")
             .font(.headline)
           
           Text("""
 Jonas Vetsch
 Hubelhüsistrasse 12
 3147 Mittelhäusern 
-jve161514@stud.gibb.ch
+jonas@vetsch.com
+
+© \(String(currentYear)) Jonas Vetsch - Alle Rechte vorbehalten.
 """)
           .padding(.bottom)
           
@@ -60,10 +51,17 @@ Der Autor übernimmt keinerlei Gewähr hinsichtlich der inhaltlichen Richtigkeit
           .padding(.bottom, 8)
           
           Text("""
-Haftungsansprüche gegen den Autor wegen Schäden materieller  oder immaterieller Art, welche aus dem Zugriff oder der Nutzung bzw.  Nichtnutzung der veröffentlichten Informationen, durch Missbrauch der  Verbindung oder durch technische Störungen entstanden sind, werden ausgeschlossen.
+Haftungsansprüche gegen den Autor wegen Schäden materieller oder immaterieller Art, welche aus dem Zugriff oder der Nutzung bzw.  Nichtnutzung der veröffentlichten Informationen, durch Missbrauch der  Verbindung oder durch technische Störungen entstanden sind, werden ausgeschlossen.
 """)
           .padding(.bottom)
           
+          Text("Fehler entdeckt oder Verbesserungsvorschläge?")
+            .font(.headline)
+          Text("""
+Wir legen grossen Wert auf die Qualität und Zuverlässigkeit unserer App und entwickeln sie kontinuierlich weiter. Solltest du auf Fehler stossen oder Anregungen und Verbesserungsvorschläge haben, freuen wir uns über deine Kontaktaufnahme.
+
+Dein Feedback ist für uns ein wesentlicher Baustein, um die Anwendung gezielt zu optimieren und noch besser an deine Bedürfnisse anzupassen.
+""")
           Spacer()
         }
         .padding(.bottom, 80)

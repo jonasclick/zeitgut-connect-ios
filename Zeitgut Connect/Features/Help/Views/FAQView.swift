@@ -33,7 +33,7 @@ struct FAQView: View {
           Text("Wer muss den Einsatz eintragen – die helfende oder die empfangende Person?")
             .font(.headline)
           
-          Text("Das spielt keine Rolle. Beim Erfassen gibst du einfach an, ob du die Zeit «gegeben» oder «erhalten» hast. Wichtig ist nur, dass nur eine der beiden beteiligten Personen den Einsatz einträgt. Das System sorgt automatisch dafür, dass diese Zeiterfassung bei beiden Parteien verbucht wird, sobald die jeweils andere Partei sie in ihrem Briefkasten bestätigt hat.")
+          Text("Wichtig ist, dass nur eine der beiden beteiligten Personen den Einsatz einträgt. Beim Erfassen gibst du einfach an, ob du die Zeit «gegeben» oder «erhalten» hast. Das System sorgt automatisch dafür, dass diese Zeiterfassung bei beiden Parteien verbucht wird, sobald die jeweils andere Partei sie in ihrem Briefkasten bestätigt hat.")
             .padding(.bottom)
           
           Text("Wozu dient der «Briefkasten» in der App?")
