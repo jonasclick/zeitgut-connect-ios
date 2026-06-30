@@ -34,12 +34,12 @@ struct AcceptDenyButtonsView: View {
           titleVisibility: .visible
         ) {
           // Action Buttons inside
-          Button("Ja, Zeiterfassung ablehnen", role: .destructive) {
+          Button("Ja, Anfrage ablehnen", role: .destructive) {
             onDeny()
           }
           Button("Nein, zurück") {}
         } message: {
-          Text("Willst du diese Zeiterfassung wirklich ablehnen? Dies kann nicht rückgängig gemacht werden.")
+          Text("Willst du diese Anfrage wirklich ablehnen? Dies kann nicht rückgängig gemacht werden.")
         }
         
         // ACCEPT (without confirmation dialog)

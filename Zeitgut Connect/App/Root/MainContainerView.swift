@@ -28,7 +28,7 @@ struct MainContainerView: View {
           .tag(0)
         
         // MAILBOX
-        MailboxView()
+        MailboxView(session: session)
           .padding(.top, 50)
           .applyAppBackground() // Hintergrund direkt hier anwenden
           .tabItem {

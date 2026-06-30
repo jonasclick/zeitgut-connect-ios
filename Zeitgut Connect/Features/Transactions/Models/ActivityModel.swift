@@ -52,6 +52,13 @@ struct TransactionsResponse: Decodable {
   let transactions: [TransactionPayload]
 }
 
+struct MailboxResponse: Decodable {
+  let authenticated: Bool
+  let isAssigned: Bool
+  let currentMemberId: String?
+  let transactions: [TransactionPayload]
+}
+
 struct MemberOption: Decodable, Identifiable, Hashable {
   let id: String
   let name: String?

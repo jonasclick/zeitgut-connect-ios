@@ -14,6 +14,13 @@ struct TransactionService {
         ))
     }
 
+    func fetchMailbox(accessToken: String) async throws -> APIResponse<MailboxResponse> {
+        try await apiClient.send(APIEndpoint(
+            path: "me/mailbox",
+            accessToken: accessToken
+        ))
+    }
+
     func fetchMembers(accessToken: String) async throws -> APIResponse<MembersResponse> {
         try await apiClient.send(APIEndpoint(
             path: "members",
