@@ -100,7 +100,7 @@ struct MailboxView: View {
         activities = response.transactions.map { $0.toActivity(for: session.userId) }
         activityError = nil
       } catch {
-        if error.isAuthenticationRequired {
+        if error.isAuthenticationRequired || error.isCancellationError {
           activityError = nil
         } else {
           activityError = error.localizedDescription
@@ -123,7 +123,7 @@ struct MailboxView: View {
         session.timeBalance = response.member?.timeBalance ?? session.timeBalance
         mailboxReloadCounter += 1
       } catch {
-        activityError = error.isAuthenticationRequired ? nil : error.localizedDescription
+        activityError = (error.isAuthenticationRequired || error.isCancellationError) ? nil : error.localizedDescription
       }
 
       isLoadingActivities = false
@@ -142,7 +142,7 @@ struct MailboxView: View {
         session.timeBalance = response.member?.timeBalance ?? session.timeBalance
         mailboxReloadCounter += 1
       } catch {
-        activityError = error.isAuthenticationRequired ? nil : error.localizedDescription
+        activityError = (error.isAuthenticationRequired || error.isCancellationError) ? nil : error.localizedDescription
       }
 
       isLoadingActivities = false
