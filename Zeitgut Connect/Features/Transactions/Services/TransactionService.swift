@@ -21,6 +21,30 @@ struct TransactionService {
         ))
     }
 
+    func acceptMailboxTransaction(
+        accessToken: String,
+        transactionId: String
+    ) async throws -> APIResponse<MailboxActionResponse> {
+        try await apiClient.send(APIEndpoint(
+            path: "me/mailbox/\(transactionId)/accept",
+            method: .post,
+            body: Data(),
+            accessToken: accessToken
+        ))
+    }
+
+    func denyMailboxTransaction(
+        accessToken: String,
+        transactionId: String
+    ) async throws -> APIResponse<MailboxActionResponse> {
+        try await apiClient.send(APIEndpoint(
+            path: "me/mailbox/\(transactionId)/deny",
+            method: .post,
+            body: Data(),
+            accessToken: accessToken
+        ))
+    }
+
     func fetchMembers(accessToken: String) async throws -> APIResponse<MembersResponse> {
         try await apiClient.send(APIEndpoint(
             path: "members",

@@ -13,6 +13,7 @@ struct MailboxView: View {
     @State private var activities: [Activity] = []
     @State private var isLoadingActivities = false
     @State private var activityError: String?
+    @State private var mailboxReloadCounter = 0
 
     private let transactionService = TransactionService()
 
@@ -48,7 +49,18 @@ struct MailboxView: View {
             } else {
               ForEach(activities) { activity in
                 ActivityCardView(activity: activity)
-                AcceptDenyButtonsView()
+                AcceptDenyButtonsView(
+                  onAccept: {
+                    Task {
+                      await acceptActivity(activity)
+                    }
+                  },
+                  onDeny: {
+                    Task {
+                      await denyActivity(activity)
+                    }
+                  }
+                )
                   .padding(.bottom, 18)
               }
             }
@@ -59,9 +71,13 @@ struct MailboxView: View {
         Spacer()
       }
       .padding()
-      .task(id: session.accessToken) {
+      .task(id: mailboxTaskId) {
         await loadActivities()
       }
+    }
+
+    private var mailboxTaskId: String {
+      "\(session.accessToken)-\(mailboxReloadCounter)"
     }
 
     private func loadActivities() async {
@@ -83,6 +99,42 @@ struct MailboxView: View {
         } else {
           activityError = error.localizedDescription
         }
+      }
+
+      isLoadingActivities = false
+    }
+
+    @MainActor
+    private func acceptActivity(_ activity: Activity) async {
+      isLoadingActivities = true
+      activityError = nil
+
+      do {
+        _ = try await transactionService.acceptMailboxTransaction(
+          accessToken: session.accessToken,
+          transactionId: activity.id
+        )
+        mailboxReloadCounter += 1
+      } catch {
+        activityError = error.isAuthenticationRequired ? nil : error.localizedDescription
+      }
+
+      isLoadingActivities = false
+    }
+
+    @MainActor
+    private func denyActivity(_ activity: Activity) async {
+      isLoadingActivities = true
+      activityError = nil
+
+      do {
+        _ = try await transactionService.denyMailboxTransaction(
+          accessToken: session.accessToken,
+          transactionId: activity.id
+        )
+        mailboxReloadCounter += 1
+      } catch {
+        activityError = error.isAuthenticationRequired ? nil : error.localizedDescription
       }
 
       isLoadingActivities = false
