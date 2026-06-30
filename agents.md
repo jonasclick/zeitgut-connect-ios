@@ -101,6 +101,7 @@ What was fixed during onboarding:
 - `LSApplicationQueriesSchemes` includes `msauthv2` and `msauthv3`, which MSAL requires.
 - Keychain entitlements were added for the MSAL cache group.
 - MSAL verbose logging hooks were added to speed up future debugging.
+- The Release archive now copies a vendored `MSAL.framework.dSYM` into the archive so App Store Connect can symbolicate MSAL crashes.
 
 What this means:
 - The repo now contains the architectural prerequisites for native Microsoft sign-in on iOS.

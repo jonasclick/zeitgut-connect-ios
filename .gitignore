@@ -35,6 +35,8 @@ DerivedData/
 *.ipa
 *.dSYM.zip
 *.dSYM
+!Vendor/MSAL/MSAL.framework.dSYM/
+!Vendor/MSAL/MSAL.framework.dSYM/**
 
 ## Playgrounds
 timeline.xctimeline
