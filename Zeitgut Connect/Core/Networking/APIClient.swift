@@ -56,6 +56,12 @@ struct APIClient {
         Self.logger.debug("API_CLIENT status=\(httpResponse.statusCode) body=\(body, privacy: .public)")
 
         guard (200 ... 299).contains(httpResponse.statusCode) else {
+            if httpResponse.statusCode == 401 {
+                Self.logger.notice("API_CLIENT authentication required for \(String(describing: type))")
+                NotificationCenter.default.post(name: .authenticationRequired, object: nil)
+                throw NetworkError.authenticationRequired
+            }
+
             throw NetworkError.server(statusCode: httpResponse.statusCode, body: body)
         }
 

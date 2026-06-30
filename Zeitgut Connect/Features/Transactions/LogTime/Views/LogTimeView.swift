@@ -277,7 +277,11 @@ struct LogTimeView: View {
       confirmationCategoryLabel = selectedCategoryLabel
       isShowingSuccessView = true
     } catch {
-      submitError = error.localizedDescription
+      if error.isAuthenticationRequired {
+        submitError = nil
+      } else {
+        submitError = error.localizedDescription
+      }
     }
 
     isSubmitting = false
@@ -324,7 +328,11 @@ struct LogTimeView: View {
         optionsError = "Es stehen noch nicht alle Auswahldaten bereit."
       }
     } catch {
-      optionsError = error.localizedDescription
+      if error.isAuthenticationRequired {
+        optionsError = nil
+      } else {
+        optionsError = error.localizedDescription
+      }
     }
 
     isLoadingOptions = false

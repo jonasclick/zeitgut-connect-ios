@@ -31,11 +31,17 @@ final class AuthViewModel: ObservableObject {
 
     private var applicationContext: MSALPublicClientApplication?
     private var didConfigureMSALLogging = false
+    private var cancellables = Set<AnyCancellable>()
+    private var isRecoveringAuthentication = false
+
+    init() {
+        observeAuthenticationRequired()
+    }
 
     func start() {
         authLogger.debug("MSAL_STEP_1 auth gate started")
         Task {
-            await initializeIfNeeded()
+            await bootstrapAuthentication()
         }
     }
 
@@ -56,19 +62,9 @@ final class AuthViewModel: ObservableObject {
         }
     }
 
-    private func initializeIfNeeded() async {
-        guard applicationContext == nil else {
-            authLogger.debug("MSAL_STEP_1 application context already initialized")
-            return
-        }
-
-        configureMSALLoggingIfNeeded()
-
+    private func bootstrapAuthentication() async {
         do {
-            authLogger.debug("MSAL_STEP_1 initializing MSAL clientId=\(self.clientId, privacy: .public) redirectUri=\(self.redirectUri, privacy: .public)")
-            let authority = try MSALAADAuthority(url: authorityURL)
-            let configuration = MSALPublicClientApplicationConfig(clientId: clientId, redirectUri: redirectUri, authority: authority)
-            applicationContext = try MSALPublicClientApplication(configuration: configuration)
+            try prepareApplicationContextIfNeeded()
             statusText = "Trying silent sign-in..."
             try await restoreSessionSilently()
         } catch {
@@ -77,6 +73,53 @@ final class AuthViewModel: ObservableObject {
             statusText = "Tap to sign in."
             errorText = Self.describe(error)
         }
+    }
+
+    private func prepareApplicationContextIfNeeded() throws {
+        guard applicationContext == nil else {
+            authLogger.debug("MSAL_STEP_1 application context already initialized")
+            return
+        }
+
+        configureMSALLoggingIfNeeded()
+        authLogger.debug("MSAL_STEP_1 initializing MSAL clientId=\(self.clientId, privacy: .public) redirectUri=\(self.redirectUri, privacy: .public)")
+        let authority = try MSALAADAuthority(url: authorityURL)
+        let configuration = MSALPublicClientApplicationConfig(clientId: clientId, redirectUri: redirectUri, authority: authority)
+        applicationContext = try MSALPublicClientApplication(configuration: configuration)
+    }
+
+    private func observeAuthenticationRequired() {
+        NotificationCenter.default.publisher(for: .authenticationRequired)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.handleAuthenticationRequired()
+            }
+            .store(in: &cancellables)
+    }
+
+    private func handleAuthenticationRequired() {
+        guard isRecoveringAuthentication == false else {
+            return
+        }
+
+        authLogger.notice("MSAL_STEP_2 backend rejected token with 401; restarting auth gate")
+        isRecoveringAuthentication = true
+        resetLocalSessionForReauthentication()
+
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            await self.bootstrapAuthentication()
+            self.isRecoveringAuthentication = false
+        }
+    }
+
+    private func resetLocalSessionForReauthentication() {
+        session = AuthSession()
+        inviteCode = ""
+        errorText = nil
+        phase = .loading
+        statusText = "Session expired. Restoring sign-in..."
+        resultText = "Trying silent sign-in..."
     }
 
     private func configureMSALLoggingIfNeeded() {
@@ -116,6 +159,11 @@ final class AuthViewModel: ObservableObject {
             let result = try await acquireTokenSilently(account: account)
             try await validateBackendSession(authenticationResult: result)
         } catch {
+            if error.isAuthenticationRequired {
+                authLogger.notice("MSAL_STEP_1 backend requested reauthentication during silent restore")
+                return
+            }
+
             authLogger.error("MSAL_STEP_1 silent token acquisition failed error=\(error.localizedDescription, privacy: .public)")
             phase = .signedOut
             statusText = "Tap to sign in."
@@ -163,6 +211,11 @@ final class AuthViewModel: ObservableObject {
 
             try await validateBackendSession(authenticationResult: result)
         } catch {
+            if error.isAuthenticationRequired {
+                authLogger.notice("MSAL_STEP_1 backend requested reauthentication after interactive sign-in")
+                return
+            }
+
             authLogger.error("MSAL_STEP_1 interactive sign-in failed error=\(error.localizedDescription, privacy: .public)")
             phase = .signedOut
             statusText = "Sign-in failed."
@@ -258,6 +311,11 @@ final class AuthViewModel: ObservableObject {
             statusText = "Association joined."
             resultText = "Account: \(session.email)\nInvitation code accepted."
         } catch {
+            if error.isAuthenticationRequired {
+                authLogger.notice("MSAL_STEP_3 backend requested reauthentication during association join")
+                return
+            }
+
             authLogger.error("MSAL_STEP_3 /api/me/join failure error=\(error.localizedDescription, privacy: .public)")
             phase = .onboarding
             statusText = "Invitation code failed."

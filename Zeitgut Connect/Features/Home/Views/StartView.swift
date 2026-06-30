@@ -104,7 +104,11 @@ struct StartView: View {
           .map { $0.toActivity(for: session.userId) }
         activityError = nil
       } catch {
-        activityError = error.localizedDescription
+        if error.isAuthenticationRequired {
+          activityError = nil
+        } else {
+          activityError = error.localizedDescription
+        }
       }
 
       isLoadingActivities = false
