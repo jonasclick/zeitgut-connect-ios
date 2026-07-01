@@ -122,7 +122,7 @@ struct MailboxView: View {
         accessToken: session.accessToken,
         transactionId: activity.id
       ).value
-      session.timeBalance = response.member?.timeBalance ?? session.timeBalance
+      session.timeBalanceMinutes = response.member?.timeBalanceMinutes ?? session.timeBalanceMinutes
       mailboxReloadCounter += 1
     } catch {
       activityError = (error.isAuthenticationRequired || error.isCancellationError) ? nil : error.localizedDescription
@@ -141,7 +141,7 @@ struct MailboxView: View {
         accessToken: session.accessToken,
         transactionId: activity.id
       ).value
-      session.timeBalance = response.member?.timeBalance ?? session.timeBalance
+      session.timeBalanceMinutes = response.member?.timeBalanceMinutes ?? session.timeBalanceMinutes
       mailboxReloadCounter += 1
     } catch {
       activityError = (error.isAuthenticationRequired || error.isCancellationError) ? nil : error.localizedDescription

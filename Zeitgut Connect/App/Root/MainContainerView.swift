@@ -42,13 +42,13 @@ struct MainContainerView: View {
           .tag(1)
         
         // MARKETPLACE
-        MarketplaceView()
-          .padding(.top, 50)
-          .applyAppBackground()
-          .tabItem {
-            Label("Marktplatz", systemImage: "storefront")
-          }
-          .tag(2)
+        // MarketplaceView()
+          // .padding(.top, 50)
+          // .applyAppBackground()
+          // .tabItem {
+           // Label("Marktplatz", systemImage: "storefront")
+          // }
+          //.tag(2)
         
         // LOG TIME
         LogTimeView(session: session)

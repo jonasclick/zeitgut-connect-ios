@@ -262,7 +262,7 @@ final class AuthViewModel: ObservableObject {
             email: meResponse.member?.email ?? meResponse.email ?? authenticationResult.account.username ?? "",
             tenantId: meResponse.member?.tenantId ?? meResponse.tenantId ?? meResponse.principal?.claimValue("tenantId", "http://schemas.microsoft.com/identity/claims/tenantid") ?? "",
             userId: meResponse.member?.id ?? meResponse.userId ?? meResponse.principal?.claimValue("http://schemas.microsoft.com/identity/claims/objectidentifier", "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier") ?? "",
-            timeBalance: meResponse.member?.timeBalance,
+            timeBalanceMinutes: meResponse.member?.timeBalanceMinutes,
             principalJson: rawJson
         )
 
@@ -303,7 +303,7 @@ final class AuthViewModel: ObservableObject {
             session.tenantId = joinResponse.tenantId ?? joinResponse.member?.tenantId ?? session.tenantId
             session.displayName = joinResponse.member?.name ?? session.displayName
             session.email = joinResponse.member?.email ?? session.email
-            session.timeBalance = joinResponse.member?.timeBalance ?? session.timeBalance
+            session.timeBalanceMinutes = joinResponse.member?.timeBalanceMinutes ?? session.timeBalanceMinutes
             session.principalJson = rawJson
             session.isLoggedIn = joinResponse.isAssigned
             inviteCode = ""

@@ -69,7 +69,28 @@ struct MailboxActionResponse: Decodable {
 struct MemberOption: Decodable, Identifiable, Hashable {
   let id: String
   let name: String?
-  let timeBalance: Double?
+  let timeBalanceMinutes: Int?
+
+  private enum CodingKeys: String, CodingKey {
+    case id
+    case name
+    case timeBalanceMinutes
+    case timeBalance
+  }
+
+  init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    id = try container.decode(String.self, forKey: .id)
+    name = try container.decodeIfPresent(String.self, forKey: .name)
+
+    if let minutes = try container.decodeIfPresent(Int.self, forKey: .timeBalanceMinutes) {
+      timeBalanceMinutes = minutes
+    } else if let hours = try container.decodeIfPresent(Double.self, forKey: .timeBalance) {
+      timeBalanceMinutes = Int((hours * 60).rounded())
+    } else {
+      timeBalanceMinutes = nil
+    }
+  }
 
   var displayName: String {
     name?.isEmpty == false ? name! : "Unbekannte Person"

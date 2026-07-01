@@ -23,7 +23,7 @@ struct AuthService {
         refreshedSession.email = meResponse.member?.email ?? meResponse.email ?? session.email
         refreshedSession.tenantId = meResponse.member?.tenantId ?? meResponse.tenantId ?? session.tenantId
         refreshedSession.userId = meResponse.member?.id ?? meResponse.userId ?? session.userId
-        refreshedSession.timeBalance = meResponse.member?.timeBalance ?? session.timeBalance
+        refreshedSession.timeBalanceMinutes = meResponse.member?.timeBalanceMinutes ?? session.timeBalanceMinutes
         refreshedSession.isLoggedIn = meResponse.isAssigned
         return refreshedSession
     }

@@ -18,8 +18,8 @@ struct StartView: View {
   private let transactionService = TransactionService()
   
   private var formattedTimeBalance: String {
-    let balance = session.timeBalance ?? 0
-    return "\(balance.formatted(.number.precision(.fractionLength(1))))h"
+    let balanceHours = Double(session.timeBalanceMinutes ?? 0) / 60
+    return "\(balanceHours.formatted(.number.precision(.fractionLength(1))))h"
   }
   
   private var refreshTaskId: String {
@@ -123,5 +123,5 @@ struct StartView: View {
 }
 
 #Preview {
-  StartView(session: .constant(AuthSession(timeBalance: 2.6)), refreshGeneration: 0)
+  StartView(session: .constant(AuthSession(timeBalanceMinutes: 156)), refreshGeneration: 0)
 }
